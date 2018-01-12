@@ -7,6 +7,7 @@
     <version>5</version>
   </parent>
 
+  <groupId>com.nyshex</groupId>
   <artifactId>docker-client</artifactId>
   <version>8.10.1-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -21,11 +22,28 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  
+  <properties>
+    <checkstyle.skip>true</checkstyle.skip>
+  </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>central</id>
+      <name>maven.nyshex.com-releases</name>
+      <url>https://maven.nyshex.com/artifactory/release</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>maven.nyshex.com-snapshots</name>
+      <url>https://maven.nyshex.com/artifactory/snapshot</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <scm>
-    <connection>scm:git:https://github.com/spotify/docker-client</connection>
-    <developerConnection>scm:git:git@github.com:spotify/docker-client</developerConnection>
-    <url>https://github.com/spotify/docker-client</url>
+    <url>https://github.com/NYSHEX/docker-client</url>
+    <connection>scm:git:git://github.com:NYSHEX/docker-client.git</connection>
+    <developerConnection>scm:git:git@github.com:NYSHEX/docker-client.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
@@ -181,6 +199,11 @@
           <artifactId>guava</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk</artifactId>
+      <version>1.11.261</version>
     </dependency>
 
     <!--test deps-->
