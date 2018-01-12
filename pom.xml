@@ -7,6 +7,7 @@
     <version>5</version>
   </parent>
 
+  <groupId>com.nyshex</groupId>
   <artifactId>docker-client</artifactId>
   <version>8.14.6-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -21,12 +22,32 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  
+  <properties>
+    <checkstyle.skip>true</checkstyle.skip>
+    <enforcer.skip>true</enforcer.skip>
+    <gpg.skip>true</gpg.skip>
+    <skipNexusStagingDeployMojo.skip>true</skipNexusStagingDeployMojo.skip>
+  </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>central</id>
+      <name>maven.nyshex.com-releases</name>
+      <url>https://maven.nyshex.com/artifactory/release</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>maven.nyshex.com-snapshots</name>
+      <url>https://maven.nyshex.com/artifactory/snapshot</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <scm>
-    <connection>scm:git:https://github.com/spotify/docker-client</connection>
-    <developerConnection>scm:git:git@github.com:spotify/docker-client</developerConnection>
-    <url>https://github.com/spotify/docker-client</url>
-    <tag>HEAD</tag>
+    <url>https://github.com/NYSHEX/docker-client</url>
+    <connection>scm:git:git://github.com:NYSHEX/docker-client.git</connection>
+    <developerConnection>scm:git:git@github.com:NYSHEX/docker-client.git</developerConnection>
+    <tag>v8.10.1</tag>
   </scm>
 
   <developers>
@@ -134,12 +155,12 @@
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-      <version>4.5</version>
+      <version>4.5.5</version>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpcore</artifactId>
-      <version>4.4.5</version>
+      <version>4.4.9</version>
     </dependency>
     <dependency>
       <groupId>com.github.jnr</groupId>
@@ -186,6 +207,11 @@
           <artifactId>guava</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk</artifactId>
+      <version>1.11.261</version>
     </dependency>
 
     <!--test deps-->
@@ -418,6 +444,15 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.3</version>
+        <extensions>true</extensions>
+        <configuration>
+            <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+        </configuration>
       </plugin>
     </plugins>
   </build>
