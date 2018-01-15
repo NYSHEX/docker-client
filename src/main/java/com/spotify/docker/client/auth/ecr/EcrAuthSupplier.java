@@ -103,7 +103,8 @@ public class EcrAuthSupplier implements RegistryAuthSupplier {
 
   private RegistryAuth authForAuthenticationToken(AuthorizationData authorizationData) {
     return RegistryAuth.builder() //
-        .identityToken(authorizationData.getAuthorizationToken()) //
+        .username("AWS") //
+        .password(authorizationData.getAuthorizationToken()) //
         .build();
   }
 
