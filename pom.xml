@@ -27,6 +27,7 @@
     <checkstyle.skip>true</checkstyle.skip>
     <enforcer.skip>true</enforcer.skip>
     <gpg.skip>true</gpg.skip>
+    <skipNexusStagingDeployMojo.skip>true</skipNexusStagingDeployMojo.skip>
   </properties>
 
   <distributionManagement>
