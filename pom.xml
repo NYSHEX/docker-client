@@ -9,7 +9,7 @@
 
   <groupId>com.nyshex</groupId>
   <artifactId>docker-client</artifactId>
-  <version>8.10.3-SNAPSHOT</version>
+  <version>8.10.2-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>docker-client</name>
   <description>A docker client</description>
@@ -428,12 +428,9 @@
         <artifactId>nexus-staging-maven-plugin</artifactId>
         <version>1.6.3</version>
         <extensions>true</extensions>
-        <executions>
-          <execution>
-            <id>deploy</id>
-            <phase>none</phase>
-          </execution>    
-        </executions> 
+        <configuration>
+            <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+        </configuration>
       </plugin>
     </plugins>
   </build>
