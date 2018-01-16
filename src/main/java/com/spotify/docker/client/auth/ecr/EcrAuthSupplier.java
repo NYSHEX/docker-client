@@ -20,12 +20,15 @@
     
 package com.spotify.docker.client.auth.ecr;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.bouncycastle.util.encoders.Base64;
 
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.ecr.AmazonECRAsync;
@@ -45,17 +48,18 @@ public class EcrAuthSupplier implements RegistryAuthSupplier {
 
   private static final Pattern ECR_REPOSITORY_PATTERN = Pattern
       .compile("([0-9]+)\\.dkr\\.ecr\\..*\\.amazonaws\\.com");
+  private static final String ECR_REPOSITORY_FORMAT = "%s%s.dkr.ecr.%s.amazonaws.com"; 
 
   private final String registryId;
-  private final String registryUrl;
+  private final String region;
 
   /**
    * @param registryId
-   * @param registryUrl
+   * @param region
    */
-  public EcrAuthSupplier(String registryId, String registryUrl) {
+  public EcrAuthSupplier(String registryId, String region) {
     this.registryId = registryId;
-    this.registryUrl = registryUrl;
+    this.region = region;
   }
 
   @Override
@@ -76,23 +80,25 @@ public class EcrAuthSupplier implements RegistryAuthSupplier {
   }
 
   @Override
-  public RegistryAuth authForSwarm() {
+  public RegistryAuth authForSwarm() throws DockerException {
     final GetAuthorizationTokenResult authorizationToken = getAuthorizationToken();
     return authForAuthenticationToken(authorizationToken.getAuthorizationData().get(0));
   }
 
   @Override
-  public RegistryConfigs authForBuild() {
+  public RegistryConfigs authForBuild() throws DockerException {
     final Map<String, RegistryAuth> configs = new HashMap<>();
     final GetAuthorizationTokenResult authorizationToken = getAuthorizationToken();
     RegistryAuth auth = authForAuthenticationToken(authorizationToken.getAuthorizationData().get(0));
-    configs.put(registryUrl, auth);
+    configs.put(getRepositoryAddress(), auth);
     return RegistryConfigs.create(configs);
   }
 
   private GetAuthorizationTokenResult getAuthorizationToken() {
+      //TODO: add support for different credential providers
     AmazonECRAsync client = AmazonECRAsyncClientBuilder.standard() //
         .withCredentials(new ProfileCredentialsProvider()) //
+        .withRegion(region) //
         .build();
     List<String> registryIds = new ArrayList<>();
     registryIds.add(registryId);
@@ -101,11 +107,28 @@ public class EcrAuthSupplier implements RegistryAuthSupplier {
     return client.getAuthorizationToken(tokenRequest);
   }
 
-  private RegistryAuth authForAuthenticationToken(AuthorizationData authorizationData) {
+  private RegistryAuth authForAuthenticationToken(AuthorizationData authorizationData) throws DockerException {
+    byte[] decodedToken = Base64.decode(authorizationData.getAuthorizationToken());
+    String decodedTokenString;
+    try {
+      decodedTokenString = new String(decodedToken, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new DockerException("Error decoding AWS ECR token and username");
+    }
+    String[] usernameAndToken = decodedTokenString.split(":");
     return RegistryAuth.builder() //
-        .username("AWS") //
-        .password(authorizationData.getAuthorizationToken()) //
+        .username(usernameAndToken[0]) //
+        .password(usernameAndToken[1]) //
+        .serverAddress(getServerAddress()) //
         .build();
+  }
+  
+  private String getServerAddress() {
+      return String.format(ECR_REPOSITORY_FORMAT, "https://", registryId, region);
+  } 
+  
+  private String getRepositoryAddress() {
+      return String.format(ECR_REPOSITORY_FORMAT, "", registryId, region);
   }
 
 }
