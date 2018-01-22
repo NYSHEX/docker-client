@@ -30,6 +30,8 @@ import java.util.regex.Pattern;
 
 import org.bouncycastle.util.encoders.Base64;
 
+import com.amazonaws.auth.AWSCredentialsProviderChain;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.ecr.AmazonECRAsync;
 import com.amazonaws.services.ecr.AmazonECRAsyncClientBuilder;
@@ -97,7 +99,12 @@ public class EcrAuthSupplier implements RegistryAuthSupplier {
   private GetAuthorizationTokenResult getAuthorizationToken() {
       //TODO: add support for different credential providers
     AmazonECRAsync client = AmazonECRAsyncClientBuilder.standard() //
-        .withCredentials(new ProfileCredentialsProvider()) //
+        .withCredentials(new AWSCredentialsProviderChain(
+            // First we'll check for EC2 instance profile credentials.
+            InstanceProfileCredentialsProvider.getInstance(),
+            // If we're not on an EC2 instance, fall back to checking for
+            // credentials in the local credentials profile file.
+            new ProfileCredentialsProvider()))
         .withRegion(region) //
         .build();
     List<String> registryIds = new ArrayList<>();
