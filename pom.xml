@@ -9,7 +9,7 @@
 
   <groupId>com.nyshex</groupId>
   <artifactId>docker-client</artifactId>
-  <version>8.14.8</version>
+  <version>8.14.9-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>docker-client</name>
   <description>A docker client</description>
@@ -44,7 +44,7 @@
     <url>https://github.com/NYSHEX/docker-client</url>
     <connection>scm:git:git://github.com:NYSHEX/docker-client.git</connection>
     <developerConnection>scm:git:git@github.com:NYSHEX/docker-client.git</developerConnection>
-    <tag>v8.14.8</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <developers>
