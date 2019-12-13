@@ -30,24 +30,22 @@
     <skipNexusStagingDeployMojo.skip>true</skipNexusStagingDeployMojo.skip>
   </properties>
 
-  <distributionManagement>
-    <repository>
-      <id>central</id>
-      <name>maven.nyshex.com-releases</name>
-      <url>https://maven.nyshex.com/artifactory/release</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <name>maven.nyshex.com-snapshots</name>
-      <url>https://maven.nyshex.com/artifactory/snapshot</url>
-    </snapshotRepository>
-  </distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>archive.nyshex.com-release</id>
+            <url>https://archive.nyshex.com/artifactory/release</url>
+        </repository>
+        <snapshotRepository>
+            <id>archive.nyshex.com-snapshot</id>
+            <url>https://archive.nyshex.com/artifactory/snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
 
   <scm>
     <url>https://github.com/NYSHEX/docker-client</url>
     <connection>scm:git:git://github.com:NYSHEX/docker-client.git</connection>
     <developerConnection>scm:git:git@github.com:NYSHEX/docker-client.git</developerConnection>
-    <tag>v8.10.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <developers>
